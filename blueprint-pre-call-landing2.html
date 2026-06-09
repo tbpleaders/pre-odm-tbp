@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Blueprint — ก่อนนัดคุย</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=GFS+Didot&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B0B0C; --paper:#F4F2EE; --paper2:#EBE7E0; --paper3:#DCD6C8;
+    --signal:#1F4ED8; --editorial:#0D2F8A; --bluelight:#C9D4EF;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:'IBM Plex Sans Thai','Cormorant Garamond',sans-serif;
+    font-size:17px; line-height:1.7; font-weight:300;
+    -webkit-font-smoothing:antialiased;
+  }
+  .didot{font-family:'GFS Didot','Cormorant Garamond',serif;}
+  .mono{font-family:'JetBrains Mono',monospace; letter-spacing:.08em; text-transform:uppercase;}
+  .wrap{max-width:980px; margin:0 auto; padding:0 28px;}
+  .accent-dot{color:var(--signal);}
+  b,strong{font-weight:600;}
+
+  /* ---- Top bar ---- */
+  .topbar{border-bottom:1px solid rgba(11,11,12,.12); background:var(--paper);}
+  .topbar .wrap{display:flex; align-items:center; gap:13px; padding:18px 28px;}
+  .topbar svg{height:32px; width:auto; flex-shrink:0;}
+  .topbar .name{font-family:'GFS Didot',serif; font-size:23px; letter-spacing:.01em;}
+  .topbar .tag{margin-left:auto; font-size:11px; color:var(--editorial);}
+
+  /* ---- Hero ---- */
+  .hero{background:var(--ink); color:var(--paper); padding:74px 0 82px; text-align:center; position:relative; overflow:hidden;}
+  .hero::after{content:""; position:absolute; inset:0;
+    background-image:linear-gradient(rgba(201,212,239,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(201,212,239,.07) 1px,transparent 1px);
+    background-size:44px 44px; pointer-events:none;}
+  .hero .wrap{position:relative; z-index:1;}
+  .hero .kicker{font-size:12px; color:var(--bluelight); margin-bottom:22px;}
+  .hero h1{font-family:'GFS Didot',serif; font-size:clamp(36px,5.5vw,62px); line-height:1.1; font-weight:400; letter-spacing:-.01em;}
+  .hero h1 .thline{display:block; font-family:'IBM Plex Sans Thai',sans-serif; font-weight:300; font-size:.52em; margin-top:14px; color:#dad7d1;}
+  .hero .sub{font-size:18px; color:#cfcbc4; max-width:660px; margin:26px auto 0; line-height:1.85;}
+  .hero .sub b{color:var(--paper); font-weight:600;}
+
+  /* ---- Section frame ---- */
+  section{padding:64px 0;}
+  .step-label{display:inline-flex; align-items:center; gap:10px; font-size:12px; color:var(--editorial); margin-bottom:18px;}
+  .step-num{display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border:1.5px solid var(--signal); color:var(--signal); border-radius:50%; font-family:'JetBrains Mono',monospace; font-size:12px;}
+  h2{font-family:'GFS Didot',serif; font-weight:400; font-size:clamp(26px,3.6vw,38px); line-height:1.18; letter-spacing:-.01em; margin-bottom:18px;}
+  p.lead{font-size:17px; line-height:1.85; color:#33312e;}
+  p.lead b{font-weight:600; color:var(--ink);}
+  .divider{height:1px; background:rgba(11,11,12,.12); max-width:980px; margin:0 auto;}
+
+  /* ---- Video ---- */
+  .video-card{margin-top:28px; border:1px solid rgba(11,11,12,.14); background:var(--paper2); border-radius:6px; overflow:hidden;}
+  .video-frame{position:relative; aspect-ratio:16/9; background:linear-gradient(135deg,#0B0B0C 0%,#0D2F8A 100%); display:flex; align-items:center; justify-content:center; text-decoration:none;}
+  .video-frame .grid-ov{position:absolute; inset:0; background-image:linear-gradient(rgba(201,212,239,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(201,212,239,.10) 1px,transparent 1px); background-size:38px 38px;}
+  .play{position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; gap:16px; color:var(--paper);}
+  .play .btn-circle{width:84px; height:84px; border-radius:50%; background:var(--signal); display:flex; align-items:center; justify-content:center; box-shadow:0 8px 30px rgba(31,78,216,.5); transition:transform .2s;}
+  .video-frame:hover .btn-circle{transform:scale(1.06);}
+  .video-player{display:block; width:100%; aspect-ratio:16/9; background:#000; object-fit:contain;}
+  .play .watch{font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--bluelight);}
+  .video-meta{display:flex; align-items:center; justify-content:space-between; padding:15px 22px; font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.05em; color:var(--editorial); text-transform:uppercase;}
+  .video-meta .len{display:inline-flex; align-items:center; gap:8px; color:var(--ink);}
+  .video-meta .len b{background:var(--signal); color:#fff; padding:3px 9px; border-radius:3px; font-weight:500;}
+  .why-list{margin-top:26px; display:grid; gap:14px;}
+  .why{display:flex; gap:14px; align-items:flex-start; background:var(--paper2); border-left:3px solid var(--signal); padding:16px 18px; border-radius:4px;}
+  .why .ico{font-size:22px; line-height:1.3;}
+  .why .wtxt{font-size:15.5px; line-height:1.65; color:#33312e;}
+  .why .wtxt b{font-weight:600; color:var(--ink);}
+  .note{font-size:13.5px; color:#7a7770; margin-top:16px; line-height:1.6;}
+
+  /* ---- Mentors ---- */
+  .mentor-section{background:var(--paper2);}
+  .mentor-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-top:30px;}
+  .mentor{background:var(--paper); border:1px solid rgba(11,11,12,.12); border-radius:8px; padding:22px 20px;}
+  .mentor .photo{width:100%; aspect-ratio:1/1; border-radius:6px; background-size:cover; background-position:center top; background-color:var(--paper3); margin-bottom:14px;}
+  .mentor.lead{border:1.5px solid var(--signal); grid-column:1/-1; display:flex; gap:24px; align-items:flex-start; flex-wrap:wrap;}
+  .mentor.lead .photo{width:180px; aspect-ratio:1/1; flex:0 0 180px; margin-bottom:0;}
+  .mentor .role{font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--editorial); margin-bottom:6px;}
+  .mentor h3{font-family:'GFS Didot',serif; font-weight:400; font-size:23px; margin-bottom:4px;}
+  .mentor .sub{font-size:13px; color:#7a7770; margin-bottom:10px;}
+  .mentor .bio{font-size:13.5px; line-height:1.6; color:#444; }
+  .mentor.lead .quote{font-family:'Cormorant Garamond',serif; font-style:italic; font-size:19px; line-height:1.5; color:var(--editorial); flex:1 1 280px; border-left:2px solid var(--signal); padding-left:18px;}
+  .mentor.lead .info{flex:1 1 320px;}
+
+  /* ---- Quadrants ---- */
+  .quad-section{}
+  .quad-img-wrap{margin:30px auto 0; max-width:560px; text-align:center;}
+  .quad-img-wrap img{width:100%; height:auto; border-radius:10px; box-shadow:0 16px 44px rgba(11,11,12,.16); border:1px solid rgba(11,11,12,.1);}
+  .quad-cap{text-align:center; font-size:14px; color:#7a7770; margin-top:20px;}
+
+  /* ---- CTAs ---- */
+  .cta-section{background:var(--ink); color:var(--paper);}
+  .cta-section h2{color:var(--paper);}
+  .cta-section .lead{color:#cfcbc4;}
+  .who-list{list-style:none; margin:6px 0 0; padding:0; display:grid; grid-template-columns:1fr 1fr; gap:12px 26px;}
+  .who-list li{font-size:16px; line-height:1.55; color:#33312e; padding-left:2px;}
+  @media(max-width:640px){ .who-list{grid-template-columns:1fr;} }
+  .honest-list{list-style:none; margin:20px 0 0; padding:0; display:flex; flex-direction:column; gap:11px; max-width:760px;}
+  .honest-list li{font-size:15.5px; line-height:1.6; color:#dad7d1; padding-left:4px;}
+  .honest-list li b{color:#fff; font-weight:600;}
+  .cta-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:34px; align-items:stretch;}
+  .cta{background:#151517; border:1px solid rgba(201,212,239,.20); border-radius:10px; padding:28px 24px; display:flex; flex-direction:column; gap:6px; position:relative; transition:border-color .2s, transform .2s;}
+  .cta:hover{border-color:var(--signal); transform:translateY(-3px);}
+  .cta .opt{font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.12em; color:var(--bluelight); text-transform:uppercase;}
+  .cta h3{font-family:'GFS Didot',serif; font-weight:400; font-size:24px; line-height:1.2; margin:6px 0 4px;}
+  .cta p{font-size:14.5px; line-height:1.65; color:#cfcbc4;}
+  .cta .price{font-family:'GFS Didot',serif; font-size:30px; color:var(--bluelight); margin-top:auto; padding-top:10px;}
+  .badge{display:inline-block; background:var(--signal); color:#fff; font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; padding:6px 11px; border-radius:4px; margin-top:10px; align-self:flex-start;}
+  .badge.outline{background:transparent; border:1px solid var(--bluelight); color:var(--bluelight);}
+  .cta-btn{margin-top:16px; align-self:stretch; text-align:center; background:var(--signal); color:#fff; font-family:'JetBrains Mono',monospace; font-size:12.5px; letter-spacing:.06em; text-transform:uppercase; text-decoration:none; padding:13px 20px; border-radius:6px; transition:background .2s;}
+  .cta-btn:hover{background:#fff; color:var(--ink);}
+  .cta-btn.ghost{background:transparent; border:1px solid rgba(201,212,239,.4); color:var(--paper);}
+  .cta-btn.ghost:hover{background:var(--paper); color:var(--ink); border-color:var(--paper);}
+  .cta.featured{border-color:var(--signal); background:#17172b; box-shadow:0 10px 36px rgba(31,78,216,.22);}
+  .cta.featured::before{content:"⭐ แนะนำ · BEST VALUE"; position:absolute; top:-12px; left:24px; background:var(--signal); color:#fff; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.08em; padding:5px 12px; border-radius:4px;}
+  .pkg{list-style:none; margin:12px 0 4px; padding:0; display:flex; flex-direction:column; gap:8px;}
+  .pkg li{font-size:14px; line-height:1.5; color:#dad7d1; padding-left:20px; position:relative;}
+  .pkg li::before{content:"✦"; position:absolute; left:0; color:var(--signal); font-size:11px; top:3px;}
+  .pkg li b{color:#fff; font-weight:600;}
+  .bonus-box{margin-top:16px; border:1px dashed rgba(201,212,239,.35); border-radius:6px; padding:14px 16px; background:rgba(31,78,216,.08);}
+  .bonus-head{display:block; color:var(--bluelight); font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; margin-bottom:9px;}
+  .bonus-box ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:5px;}
+  .bonus-box li{font-size:12.5px; color:#cfcbc4; line-height:1.45; padding-left:15px; position:relative;}
+  .bonus-box li::before{content:"+"; position:absolute; left:0; color:var(--signal); font-weight:600;}
+  .bonus-box li em{color:#9aa9d8; font-style:normal; font-family:'JetBrains Mono',monospace; font-size:10.5px;}
+
+  /* ---- Partners ---- */
+  .partners{background:var(--paper2); text-align:center;}
+  .partners .eyebrow{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--editorial); margin-bottom:12px;}
+  .partners h2{font-size:clamp(22px,3vw,30px);}
+  .partners .pdesc{font-size:15.5px; color:#33312e; max-width:680px; margin:0 auto 30px; line-height:1.8;}
+  .logo-row{display:flex; flex-wrap:wrap; justify-content:center; gap:14px; max-width:820px; margin:0 auto;}
+  .logo-chip{background:var(--paper); border:1px solid rgba(11,11,12,.14); border-radius:8px; padding:14px 22px; font-family:'GFS Didot',serif; font-size:17px; color:var(--ink); display:flex; align-items:center; min-height:58px;}
+  .logo-chip .mono{font-family:'JetBrains Mono',monospace; font-size:11px;}
+
+  /* ---- Footer ---- */
+  footer{background:var(--ink); color:#7a7770; text-align:center; padding:40px 0 54px; border-top:1px solid rgba(201,212,239,.12);}
+  footer svg{height:38px; width:auto; margin-bottom:14px;}
+  footer .fname{font-family:'GFS Didot',serif; color:var(--paper); font-size:22px;}
+
+  @media(max-width:760px){
+    .cta-grid{grid-template-columns:1fr;}
+    .cta .price{padding-top:8px;}
+    .topbar .tag{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== TOP BAR ===== -->
+<div class="topbar">
+  <div class="wrap">
+    <svg viewBox="-4 -4 68 58" xmlns="http://www.w3.org/2000/svg" aria-label="The Blueprint crown">
+      <path d="M 8 40 L 8 14 L 18 26 L 30 6 L 42 26 L 52 14 L 52 40 Z" fill="#1f4ed8"/>
+      <rect x="8" y="40" width="44" height="5" fill="#1f4ed8"/>
+      <circle cx="8" cy="12" r="2.5" fill="#1f4ed8"/><circle cx="30" cy="4" r="3" fill="#1f4ed8"/><circle cx="52" cy="12" r="2.5" fill="#1f4ed8"/>
+    </svg>
+    <span class="name">The Blueprint<span class="accent-dot">.</span></span>
+    <span class="tag mono">Pre-Call Briefing</span>
+  </div>
+</div>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker mono">📋 ก่อนนัดคุยกับ The Blueprint Mentors</div>
+    <h1>Watch this first.
+      <span class="thline">📺 ดูคลิปนี้ “ให้จบก่อนนัด” เท่านั้น</span>
+    </h1>
+    <p class="sub">ก่อนถึงวันนัด อยากให้ทุกคน<b>เข้าใจคำศัพท์การเงินพื้นฐาน</b> และได้<b>รู้จักทีมเมนเทอร์ที่จะได้คุยด้วย</b>ล่วงหน้า 🤝 เพื่อให้เราคุยกันด้วยภาษาเดียวกัน และใช้เวลาใน Video Call ให้คุ้มค่าที่สุด</p>
+  </div>
+</header>
+
+<!-- ===== STEP 1: VIDEO ===== -->
+<section>
+  <div class="wrap">
+    <div class="step-label mono"><span class="step-num">1</span> 🎬 ดูคลิปแนะนำตัว</div>
+    <h2>รู้จักทีมเมนเทอร์ก่อนเริ่มคุย<span class="accent-dot">.</span></h2>
+    <p class="lead">คลิปสั้น ๆ ที่จะพาไปรู้จัก The Blueprint Mentors และปูพื้นคำศัพท์การเงินที่จำเป็น แนะนำให้<b>ดูให้จบก่อนวันนัด</b> เพื่อให้การพูดคุยลื่นไหลและตรงประเด็นมากขึ้น 🎯</p>
+
+    <div class="video-card">
+      <video class="video-player" controls preload="metadata" playsinline>
+        <source src="the-blueprint-podm.mp4" type="video/mp4">
+        เบราว์เซอร์ของท่านไม่รองรับการเล่นวิดีโอ
+      </video>
+      <div class="video-meta">
+        <span>The Blueprint Mentors — Intro</span>
+        <span class="len">⏱ ใช้เวลาเพียง <b>20:52</b></span>
+      </div>
+    </div>
+
+    <div class="why-list">
+      <div class="why"><span class="ico">🧭</span><div class="wtxt"><b>ทำไมต้องดูก่อน:</b> คลิปจะปูคำศัพท์การเงินที่ใช้บ่อย, mindset นักธุรกิจ และประสบการณ์จาก mentor แต่ละท่าน — พอเข้าใจแล้ว วันคุยจริงจะไปได้เร็วและลึกขึ้นมาก</div></div>
+      <div class="why"><span class="ico">🤝</span><div class="wtxt"><b>รู้จักทีมก่อน:</b> ได้เห็นว่าใครคือเมนเทอร์ พื้นเพ ประสบการณ์ และแนวทางการทำงาน — จะได้มั่นใจว่ากำลังคุยกับใคร</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MENTORS ===== -->
+<section class="mentor-section">
+  <div class="wrap">
+    <div class="step-label mono"><span class="step-num">★</span> 👥 ทีมเมนเทอร์ของท่าน</div>
+    <h2>คนที่จะเดินเส้นทางนี้ไปกับท่าน<span class="accent-dot">.</span></h2>
+    <p class="lead">ทีมผู้ประกอบการและนักลงทุนตัวจริง ที่ลงมือทำธุรกิจมาแล้วในหลากหลายสนาม 🌱</p>
+
+    <div class="mentor-grid">
+      <div class="mentor lead">
+        <div class="photo" style="background-image:url('mentors/ninoy.jpg')"></div>
+        <div class="info">
+          <div class="role">★ Lead Mentor</div>
+          <h3>Rathee Chanchinpavinnat</h3>
+          <div class="sub">นักเขียน · สปีกเกอร์</div>
+          <div class="bio">🎓 BBA, จุฬาลงกรณ์มหาวิทยาลัย · Wesley College, Melbourne — นักเขียนระดับ international bestseller ด้านภาวะผู้นำและ personal branding, อดีตผู้บริหารการตลาด, World Marathon Majors 8-Star Finisher 🏃</div>
+        </div>
+      </div>
+
+      <div class="mentor">
+        <div class="photo" style="background-image:url('mentors/noey.jpg')"></div>
+        <div class="role">Mentor</div>
+        <h3>Rintarn W.</h3>
+        <div class="sub">นักลงทุน · เจ้าของธุรกิจ</div>
+        <div class="bio">🎓 BSc Economics, University of Bristol, UK — นักลงทุนอสังหาฯ และเจ้าของโรงแรม, ครีเอเตอร์ CTclockwises 280K (Platinum Button), เจ้าของธุรกิจ e-commerce และแพลตฟอร์มออนไลน์, NLP Practitioner Coach</div>
+      </div>
+
+      <div class="mentor">
+        <div class="photo" style="background-image:url('mentors/tam.jpg')"></div>
+        <div class="role">Mentor</div>
+        <h3>Chonthanat C.</h3>
+        <div class="sub">Content Creator · Coach</div>
+        <div class="bio">🎓 BBA in Real Estate, ABAC — ครีเอเตอร์และโค้ชด้านโภชนาการ เจ้าของเพจออนไลน์หลายเพจ</div>
+      </div>
+
+      <div class="mentor">
+        <div class="photo" style="background-image:url('mentors/tim.png')"></div>
+        <div class="role">Mentor</div>
+        <h3>Ratchanon S.</h3>
+        <div class="sub">นักธุรกิจ · Certified Coach</div>
+        <div class="bio">🎓 BBA, Bangkok University International — ธุรกิจนำเข้า-ส่งออก, สวนน้ำและพัฒนาที่ดิน, Certified Coach</div>
+      </div>
+
+      <div class="mentor">
+        <div class="photo" style="background-image:url('mentors/chat.jpg')"></div>
+        <div class="role">Mentor</div>
+        <h3>Chatchai P.</h3>
+        <div class="sub">เจ้าของธุรกิจ</div>
+        <div class="bio">🎓 Tourism Management, Bangkok University — เจ้าของธุรกิจร้านอาหารและไลฟ์สไตล์หลายแห่ง</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== WHO IT'S FOR ===== -->
+<section style="background:var(--paper2);">
+  <div class="wrap">
+    <div class="step-label mono"><span class="step-num">✓</span> 🎯 เหมาะกับใคร</div>
+    <ul class="who-list">
+      <li>🌱 คนที่ชอบพัฒนาตนเอง</li>
+      <li>📈 คนที่มีธุรกิจอยู่แล้ว อยากได้มุมมองการเงินและ vision ที่กว้างขึ้น พร้อมเครือข่ายคนทำธุรกิจ</li>
+      <li>💼 คนที่อยากวางแผนการเงินเพื่อมีธุรกิจของตนเอง</li>
+      <li>🆓 ไม่จำเป็นต้องมีความรู้การเงินมาก่อน — เราช่วยปูให้ตั้งแต่ 0–100</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== CONSULT EXPECTATIONS ===== -->
+<section style="background:var(--paper);">
+  <div class="wrap">
+    <div class="step-label mono"><span class="step-num">✓</span> 📅 เตรียมตัวก่อน Video Call</div>
+    <h2>Video Call ฟรี 15 นาทีแรก<span class="accent-dot">.</span></h2>
+    <div class="why-list" style="margin-top:22px;">
+      <div class="why"><span class="ico">🔇</span><div class="wtxt"><b>หาสถานที่เงียบสงบ</b> เพื่อโฟกัสได้เต็มที่ และใช้เวลา 15 นาทีนี้ให้คุ้มค่าที่สุด</div></div>
+      <div class="why"><span class="ico">💸</span><div class="wtxt">โฟกัสที่ <b>เป้าหมายการเงิน</b> และ <b>เป้าหมายธุรกิจ</b> — หลังจบ ท่านจะได้แผนส่วนตัวกลับไป 🗺️</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PARTNERS ===== -->
+<section class="partners">
+  <div class="wrap">
+    <div class="eyebrow">🤝 Trusted Partner</div>
+    <h2>พาร์ตเนอร์ที่องค์กรชั้นนำไว้วางใจ<span class="accent-dot">.</span></h2>
+    <p class="pdesc">The Blueprint Mentor และ Cashflow Club TH ได้จัดอบรมและเวิร์กชอปด้านการเงินและการวางเป้าหมายธุรกิจให้กับสถาบันชั้นนำมาแล้วมากมาย 🏛️</p>
+    <div class="logo-row">
+      <div class="logo-chip">Kasikorn Bank</div>
+      <div class="logo-chip">UOB</div>
+      <div class="logo-chip">Allianz</div>
+      <div class="logo-chip">BANPU</div>
+      <div class="logo-chip">SET Thailand</div>
+      <div class="logo-chip">Chulalongkorn University</div>
+      <div class="logo-chip">Bangkok University</div>
+      <div class="logo-chip mono">&amp; many more</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== STEP 3: CALL TO ACTION ===== -->
+<section class="cta-section">
+  <div class="wrap">
+    <div class="step-label mono" style="color:var(--bluelight)"><span class="step-num" style="border-color:var(--bluelight);color:var(--bluelight)">2</span> 🚀 ก้าวต่อไป · CHOOSE YOUR PATH</div>
+    <h2>เลือกเส้นทางที่ใช่ แบบที่คุณเลือกได้<span class="accent-dot">.</span></h2>
+    <p class="lead">มี 3 ทางเลือก โดยคุณ <b>“เลือกทางใดก็ได้”</b></p>
+    <ul class="honest-list">
+      <li>💯 ใน <b>15 นาทีฟรี</b> ที่ได้คุยกัน คุณจะได้<b>เนื้อ ๆ</b> ทั้งเรื่องการเงินและเป้าหมายขั้นต้นกลับไปแน่นอน เพราะ mission ของเหล่า Mentor คือ อยากให้คนไทย<b>มีความรู้ทางการเงิน</b> และ<b>ชัดเจนในเป้าหมายธุรกิจ</b>อย่างยั่งยืน ผ่านการแชร์ประสบการณ์จริง — ให้อย่างจริงใจ ในราคาที่ทุกคนเข้าถึงได้</li>
+      <li>🤝 จะไปต่อในคลาสที่มีค่าใช้จ่ายหรือไม่ แล้วแต่ท่านเลย — แต่<b>อย่างน้อยท่านจะได้แผนการเงินและธุรกิจกลับไปแน่นอน</b> ตามที่เราสัญญาไว้แต่ต้น</li>
+    </ul>
+
+    <div class="cta-grid">
+
+      <!-- Option 01 = Private Consult (swapped to first) -->
+      <div class="cta featured">
+        <span class="opt">Option 01 · VIP Private</span>
+        <h3>Private Consult รายปี</h3>
+        <p>ที่ปรึกษาส่วนตัวรายปีกับ <b style="color:#fff">The Blueprint Mentor</b> สำหรับคนที่ต้องการเมนเทอร์ มุ่งความสำเร็จ 100% และอยากประหยัดเวลา เจาะลึกปัญหารายบุคคล/ธุรกิจ 🎯</p>
+        <ul class="pkg">
+          <li><b>Video Call 1 คลาส/อาทิตย์</b> · คลาสละ 1 ชม.</li>
+          <li><b>เจอตัว 4 ครั้ง/ปี</b></li>
+          <li>หน่วยงานบริษัท — ผู้เกี่ยวข้องเข้าเรียนได้ทุกคน</li>
+          <li>ติดตามผลรายอาทิตย์ พร้อมปรับแผน</li>
+          <li>ได้คอร์ส Followers to Business และทุกคอร์สในเครือ</li>
+        </ul>
+        <div class="bonus-box">
+          <span class="bonus-head">🎁 Bonus &amp; การันตี · รวมมูลค่า 73,500 บาท</span>
+          <ul>
+            <li>VDO Call 1 ชม + Roadmap รายบุคคล <em>(9,500)</em></li>
+            <li>คอร์สหลัก Followers to Business <em>(55,500)</em></li>
+            <li>หนังสือ Followers to Business <em>(3,500)</em></li>
+            <li>คอร์ส Better Life Planning <em>(5,500)</em></li>
+            <li>การันตีการเปลี่ยนแปลงใน 90 วัน เมื่อทำการบ้าน 100%</li>
+          </ul>
+        </div>
+        <span class="price didot">150,000 <span style="font-size:17px;color:#9aa9d8">บาท/ปี</span></span>
+        <p style="font-size:12.5px; color:#9aa9d8; margin-top:8px;">📌 ต้องผ่านการ booking กับผู้ที่แนะนำท่านให้มาดู landing page นี้ เนื่องจากเราไม่ได้รับทุกท่าน</p>
+        <a class="cta-btn" href="#" target="_blank" rel="noopener">จองที่ปรึกษาส่วนตัว →</a>
+      </div>
+
+      <!-- Option 02 = Finance Workshop -->
+      <div class="cta">
+        <span class="opt">Option 02 · Finance Workshop</span>
+        <h3>Cashflow Club TH</h3>
+        <p>เรียนรู้การเงินแบบเข้าใจง่ายผ่านบอร์ดเกมที่<b style="color:#fff">แนะนำทั่วโลก</b> 🎲 จัดทุกเดือนโดยพาร์ตเนอร์ของเรา</p>
+        <ul class="pkg" style="margin-top:10px;">
+          <li>ผู้สอน <b>Certified</b> ผ่านการเรียนตรงจาก Robert Kiyosaki</li>
+          <li>ผู้แต่ง “พ่อรวยสอนลูก” หนังสือการเงินอันดับ 1 📚</li>
+          <li>พร้อม<b>โค้ดส่วนลด 15%</b> (ขอทางผู้แนะนำของท่าน)</li>
+        </ul>
+        <span class="price didot">3,990 <span style="font-size:17px;color:#9aa9d8">บาท</span></span>
+        <span class="badge">🎟 ส่วนลด 15% · ขอโค้ดจากผู้แนะนำ</span>
+        <a class="cta-btn" href="#" target="_blank" rel="noopener">สมัครเวิร์กชอป →</a>
+      </div>
+
+      <!-- Option 03 = Free option bonus -->
+      <div class="cta">
+        <span class="opt">Option 03 · Free + Bonus</span>
+        <h3>Free Video Call 15 นาที + Bonus 🎁</h3>
+        <p style="margin-bottom:6px;">ท่านจะได้ <b style="color:#fff">2 อย่าง</b>:</p>
+        <ul class="pkg">
+          <li><b>Free Video Call 15 นาที</b> โฟกัสเป้าหมายการเงินและธุรกิจ</li>
+          <li><b>Bonus อื่น ๆ</b> แล้วแต่ผู้แนะนำท่านแจ้ง 🎁</li>
+        </ul>
+        <span class="badge outline">🎁 100% FREE · ถามผู้ที่ส่งลิงก์ให้ท่าน</span>
+        <a class="cta-btn ghost" href="#" target="_blank" rel="noopener">จองสิทธิ์ฟรี →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="wrap">
+    <svg viewBox="-4 -4 68 58" xmlns="http://www.w3.org/2000/svg" aria-label="crown">
+      <path d="M 8 40 L 8 14 L 18 26 L 30 6 L 42 26 L 52 14 L 52 40 Z" fill="#1f4ed8"/>
+      <rect x="8" y="40" width="44" height="5" fill="#1f4ed8"/>
+      <circle cx="8" cy="12" r="2.5" fill="#1f4ed8"/><circle cx="30" cy="4" r="3" fill="#1f4ed8"/><circle cx="52" cy="12" r="2.5" fill="#1f4ed8"/>
+    </svg>
+    <div class="fname">The Blueprint<span class="accent-dot">.</span></div>
+  </div>
+</footer>
+
+</body>
+</html>
